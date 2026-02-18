@@ -55,11 +55,15 @@
 		Then, I found the min/max of x and y among the three vertices to bound the triangle via a rectangle. I used floor() for minimum and ceil() for maximum to ensure that no potentially covered pixels are missing. 
 		I also ensured that the min x,y is non-negative by setting it to 0 if they are min x,y is negative. A similar idea applies to max x,y, where I set the max x,y to width-1 and height-1, respectively. Next, I check if the triangle’s signed area is 0, and return early if it is. 
 		For each sample point, I made sure I added 0.5 to x and y in order to center the pixel. Lastly, I ran the edge function for the sample points against all edges to get three signed values. If all of these three values are either all non-negative or all non-positive, I call fill_pixel() to color that sample point.
-
+		<br><br>
 		My algorithm explicitly iterates over every pixel within the triangle’s bounding box by looping from min_x to max_x and from min_y to max_y. 
 		Since the bounding box is constructed using the minimum and maximum vertex coordinates (with floor() and ceil() to ensure full coverage), it is the smallest rectangle that completely contains the triangle.
 		Therefore, my algorithm performs exactly the same as the algorithm that checks if each sample is within the bounding box of the triangle.
-
+		
+		<figure>
+			<img src="task1 pic.png" alt="basic/test4" style="width:50%"/>
+			<figcaption>basic/test4.svg!</figcaption>
+		</figure>
 
 		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
