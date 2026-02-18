@@ -27,16 +27,16 @@
 	</head>
 	<body>
 		<div class="container">
-		<h1>CS184/284A Spring 2025 Homework 1 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<h1>CS184/284A Spring 2026 Homework 1 Write-Up</h1>
+		<div style="text-align: center;">Names: Steve Chen</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp26">cs184.eecs.berkeley.edu/sp26</a>
 		
 		<br>
 
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp26">cs184.eecs.berkeley.edu/sp26</a>
 
 		<figure>
 			<img src="lion.jpg" alt="Lion" style="width:50%"/>
@@ -51,18 +51,26 @@
 		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
-		Initially, I defined a helper function called edge() to calculate 2D cross product since it will be used multiple times as we run the rasterization function.
-		Then, I found the min/max of x and y among the three vertices to bound the triangle via a rectangle. I used floor() for minimum and ceil() for maximum to ensure that no potentially covered pixels are missing. 
-		I also ensured that the min x,y is non-negative by setting it to 0 if they are min x,y is negative. A similar idea applies to max x,y, where I set the max x,y to width-1 and height-1, respectively. Next, I check if the triangle’s signed area is 0, and return early if it is. 
-		For each sample point, I made sure I added 0.5 to x and y in order to center the pixel. Lastly, I ran the edge function for the sample points against all edges to get three signed values. If all of these three values are either all non-negative or all non-positive, I call fill_pixel() to color that sample point.
-		<br><br>
-		My algorithm explicitly iterates over every pixel within the triangle’s bounding box by looping from min_x to max_x and from min_y to max_y. 
-		Since the bounding box is constructed using the minimum and maximum vertex coordinates (with floor() and ceil() to ensure full coverage), it is the smallest rectangle that completely contains the triangle.
-		Therefore, my algorithm performs exactly the same as the algorithm that checks if each sample is within the bounding box of the triangle.
-		
+		<h3>Implementation Details</h3>
+		<ol>
+			<li>Find the min/max of x and y among the three vertices to bound the triangle via a rectangle.</li>
+			<li>Use floor() for minimum and ceil() for maximum to ensure all pixels are covered.</li>
+			<li>Ensure x, y is within 0 to width-1 and 0 to height-1, respectively.</li>
+			<li>Return early if signed area is 0.</li>
+			<li>Sample at pixel center: (x + 0.5, y + 0.5).</li>
+			<li>Compute edge function values for all 3 edges.</li>
+			<li>If all 3 have the same sign (all ≥ 0 or all ≤ 0), call fill_pixel().</li>
+			<li>Loop over pixels in the triangle’s bounding box, which is the smallest rectangle that contains the triangle.</li>
+		</ol>
+		<h3>Algorithm efficiency:</h3>
+		<p>
+		My algorithm is no worse than one that checks each sample within the bounding box of the triangle because that's basically what I'm doing. By bounding the triangle using floor() and ceil() on vertex mins/maxes, it’s the smallest rectangle that fully contains the triangle
+		</p>
+
+		<h3>Screenshot of basic/test4.svg:</h3>
 		<figure>
 			<img src="task1 pic.png" alt="basic/test4" style="width:50%"/>
-			<figcaption>basic/test4.svg!</figcaption>
+			<figcaption>basic/test4.svg</figcaption>
 		</figure>
 
 		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
