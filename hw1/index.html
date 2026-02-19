@@ -119,7 +119,40 @@
 		</figure>
 		
 		<h2>Task 4: Barycentric coordinates</h2>
+		<h3>Barycentric coordinates:</h3>
+		<p>
+		Barycentric coordinates describe a point <em>P</em> inside (or on) a triangle as a weighted combination of its three vertices.
+		For a triangle with vertices <em>A</em>, <em>B</em>, and <em>C</em>, the barycentric coordinates \((\alpha, \beta, \gamma)\) of a point <em>P</em> satisfy:
+		\[
+			P = \alpha A + \beta B + \gamma C, \quad \text{where } \alpha + \beta + \gamma = 1.
+		\]
+		The values \(\alpha\), \(\beta\), and \(\gamma\) represent how much each vertex contributes to the point <em>P</em>.
+		For points inside the triangle, all three weights are nonnegative.
+		If the vertices have colors, barycentric coordinates let us smoothly interpolate the color at <em>P</em> using the same weights:
+		\[
+			\text{Color}(P) = \alpha\,\text{Color}(A) + \beta\,\text{Color}(B) + \gamma\,\text{Color}(C).
+		\]
+		In the example triangle, the top vertex is blue, the bottom-left vertex is red, and the bottom-right vertex is green.
+		Near the blue vertex, \(\alpha\) is large, so the color looks more blue; near the red vertex, \(\beta\) is large; near the green vertex, \(\gamma\) is large.
+		At the center of the triangle, the weights are more balanced, so the color becomes a mix of all three.
+		At each vertex, the corresponding weight is 1 and the others are 0, so the color matches the vertex color exactly.
+		This is why barycentric coordinates produce a smooth gradient across the triangle.
+		</p>
 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="task 4 triangle.png" width="400px"/>
+				  <figcaption>Triangle.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="task 4.png" width="400px"/>
+				  <figcaption>svg/basic/test4.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 		
 		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
