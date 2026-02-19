@@ -155,10 +155,58 @@
 		</div>
 		
 		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h3>Pixel Sampling:</h3>
+		<p>
+			Pixel sampling is a technique used in texture mapping to determine the color of a pixel on the screen based on the corresponding point on a texture image. 
+			When rendering a textured surface, we need to map each pixel on the screen to a point on the texture. However, the texture image is discrete, and the point we want to sample may not correspond exactly to a single pixel in the texture.
+			Pixel sampling addresses this by using interpolation to compute the color of the pixel based on the colors of the nearby texture pixels.
+			There are two main different approaches to pixel sampling: nearest-neighbor sampling and bilinear interpolation.
+		</p>
+		<h3>Nearest-Neighbor Sampling:</h3>
+		<p>
+			I implemented nearest sampling by taking the interpolated (u, v) at each covered sample, clamping it to [0,1].Then I map it to texel space and round it to the closest integer texel index. Finally, I fetch that single texel and display it.
+		</p>
+
+		<h3>Bilinear Interpolation:</h3>
+		<p>
+			For bilinear sampling, after mapping (u, v) to (x, y), I take the 2×2 neighborhood around it. I compute the fractional part of (x, y) to get the weights for interpolation. 
+			Then I fetch the colors of the 4 neighboring texels and blend the four texels by linear interpolation in x twice and y once.
+		</p>
+
+		<h3>Screenshot with different sampling methods and sample rates:</h3>
+		<p>Here's the screenshots with the default viewing parameters, nearest sampling and bilinear sampling, and sample rates 1 and 16.
+			As seen on the pictures, the antialiasing quality improves with higher sample rates for both sampling methods. 
+			Additionally, bilinear sampling produces smoother results compared to nearest sampling, especially when sample rate is 1 per pixel, because it blends the colors of neighboring texels rather than picking a single texel color.
+			This prevents the blocky artifacts that occurred with nearest sampling, which is fairly clear at the white lines.
+			As the sample rate increases to 16 per pixel, the difference between nearest and bilinear sampling becomes less noticeable because the higher sample rate already provides better antialiasing.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="near 1sp.png" width="400px"/>
+				  <figcaption>nearest sampling, 1 sample per pixel.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="near 16sp.png" width="400px"/>
+				  <figcaption>nearest sampling, 16 samples per pixel.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="bi 1sp.png" width="400px"/>
+				  <figcaption>bilinear sampling, 1 sample per pixel.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bi 16sp.png" width="400px"/>
+				  <figcaption>bilinear sampling, 16 samples per pixel.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h3>Level Sampling:</h3>
 
 		<h2>(Optional) Task 7: Extra Credit - Draw Something Creative!</h2>
 
