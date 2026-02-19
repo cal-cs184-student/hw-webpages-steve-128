@@ -72,39 +72,53 @@
 			<img src="task1 pic.png" alt="basic/test4" style="width:50%"/>
 			<figcaption>basic/test4.svg</figcaption>
 		</figure>
+		
+		<h2>Task 2: Antialiasing by Supersampling</h2>
+		<h3>Why is supersampling useful?</h3>
+		<p>
+			Supersampling is useful because it helps reduce aliasing artifacts in images. 
+			By sampling multiple points within each pixel and averaging their contributions, it produces smoother edges and more visually coherent results.
+			This is especially useful for rendering high-contrast edges, such as triangle edges, where aliasing can be particularly noticeable.
+		</p>
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<h3>Modification details:</h3>
+		<ol>
+			<li>Modify set_sample_rate() so that the buffer size changes dynamically with the sample rate.</li>
+			<li>In fill_pixel(), loop over sample_rate and set all subsamples for pixel (x,y) in sample_buffer to the same color.</li>
+			<li>Downsample by averaging samples corresponding to each pixel in resolve_to_framebuffer().</li>
+  			<li>Scale up coordinates by sqrt(sample_rate) in rasterize_triangle() and rasterize on the supersample grid by testing each subsample center. Write the triangle color into the corresponding slot in sample_buffer if it's inside.</li>
+		</ol>
+
+		<h3>Screenshot of basic/test4.svg in different sample rates:</h3>
+		<p>Here's the screenshots of basic/test4.svg with the default viewing parameters and sample rates 1, 4, 9, and 16. As seen on the pictures, the antialiasing quality improves with higher sample rates. In other words, the more samples per pixel, the smoother the edges of the triangle appear.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="task2 1pixel.png" width="400px"/>
+				  <figcaption>supersample rate 1/pixel.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="task2 4pixel.png" width="400px"/>
+				  <figcaption>supersample rate 4/pixel.</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="task2 9pixel.png" width="400px"/>
+				  <figcaption>supersample rate 9/pixel.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="task2 16pixel.png" width="400px"/>
+				  <figcaption>supersample rate 16/pixel.</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
-		
-		<h2>Task 2: Antialiasing by Supersampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 		<h2>Task 3: Transforms</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+		
 		<h2>Task 4: Barycentric coordinates</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
