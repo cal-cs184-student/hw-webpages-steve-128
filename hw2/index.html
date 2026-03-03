@@ -36,7 +36,7 @@
 
 		<br>
 		
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/hw2-meshedit-qwertyuiop">https://github.com/cal-cs184-student/hw2-meshedit-qwertyuiop</a>
 
 		<figure>
 			<img src="teapot.png" alt="Teapot" style="width:50%"/>
@@ -53,29 +53,50 @@
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
 		<h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<h4>de Casteljau’s algorithm:</h4>
+		<p>
+			de Casteljau’s algorithm evaluates a Bezier curve at a parameter t∈[0,1] using repeated linear interpolation between control points. 
+			Starting from n control points, it performs linear interpolation between adjacent pairs of control points to generate n−1 new points. 
+			This process is repeated until only one point remains, which is the point on the Bezier curve at parameter t. 
+		</p>
+		<h4>Implementation details:</h4>
+		<p>
+			To implement the de Casteljau’s algorithm, I have a function that takes in n control points and the parameter t, and computes 1 step of the algorithm, generating n-1 points.
+			By recursively calling this function, I can compute the point on the curve at any parameter t.
+			In the function, I computed the n-1 vector, where <code>result[i] = lerp(t, points[i], points[i+1])</code>. 
+			In addition to this, I also have lerp as a helper function that computes the linear interpolation between two points given a parameter t. 
+		</p>
+		<h4>Here are the results of a 6 control points Bezier curve:</h4>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="q1step1.png" width="400px"/>
+				  <figcaption>Step 1 of de Casteljau subdivision.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="q1step2.png" width="400px"/>
+				  <figcaption>Step 2 of de Casteljau subdivision.</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="q1step3.png" width="400px"/>
+				  <figcaption>Step 3 of de Casteljau subdivision.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="q1step4.png" width="400px"/>
+				  <figcaption>Step 4 of de Casteljau subdivision.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q1step5.png" width="400px"/>
+				  <figcaption>Step 5(final step) of de Casteljau subdivision.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q1difft.png" width="400px"/>
+				  <figcaption>Result of de Casteljau subdivision with different control point and t.</figcaption>
 				</td>
 			  </tr>
 			</table>
