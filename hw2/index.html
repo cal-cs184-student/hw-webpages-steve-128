@@ -103,7 +103,25 @@
 		</div>
 
 		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>de Casteljau algorithm extends to Bezier surfaces:</h4>
+		<p>
+			de Casteljau’s algorithm extends from Bezier curves to Bezier surfaces by applying the same repeated linear interpolation in two parametric directions (u and v).
+			For a Bezier surface defined by a grid of control points, the algorithm first performs linear interpolation along one parametric direction to compute intermediate points. 
+			With these intermediate points, it then applies the same process along the other parametric direction to compute the final point on the surface corresponding to parameters (u, v).
+			As a result, the algorithm finally evaluates the point on the Bezier surface at parameters (u, v) by performing linear interpolation in both directions, which effectively generalizes the 1D de Casteljau’s algorithm to 2D surfaces.
+		</p>
+		<h4>Implementation details:</h4>
+		<p>
+			In the implementation, I wrote a function <code>evaluateStep</code> that evaluates a step of de Casteljau by linearly interpolating adjacent 3D points, which is similar to the function I wrote for Part 1, except that it works on 3D points instead of 2D points.
+			Using this function, I wrote another function <code>evaluate1D</code> that repeatedly applies this <code>evaluateStep</code> until one point remains. 
+			Lastly, I wrote a function that evaluates the Bezier surface at parameters (u, v) by first calling <code>evaluate1D</code> in one direction to compute intermediate points, and then applying it again in the other direction to compute the final point on the surface. 
+		</p>
+
+		<h4>Here is the screenshot of bez/teapot.bez:</h4>
+		<figure>
+			<img src="q2.png" alt="q2 teapot" style="width:50%"/>
+			<figcaption>screenshot of bez/teapot.bez evaluated by my implementation</figcaption>
+		</figure>
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
