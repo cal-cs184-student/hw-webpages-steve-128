@@ -128,7 +128,7 @@
 		<h3>Part 3: Area-weighted vertex normals</h3>
 		<h4>Implementation of Area-weighted vertex normals:</h4>
 		<p>
-			I created a loop that loops over all the half-edges of a given vertex. This allows me to iterate through all the trianges that are adjacent to the vertex. 
+			I created a loop that loops over all the halfedges of a given vertex. This allows me to iterate through all the trianges that are adjacent to the vertex. 
 			For each triangle, I compute the normal vector by taking the cross product of two edges of the triangle and add that to the accumulated normal vector for the vertex. 
 			Finally, I normalize the accumulated normal vector to get the area-weighted vertex normal.
 		</p>
@@ -149,7 +149,31 @@
 		</div>
 
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Implementation of edge flip:</h4>
+		<p>
+			Following the implementation reccomendations in the spec, I first check if the edge is a boundary edge. If it is, I return and don't preform the edge flip. 
+			If it is not a boundary edge, I perform the edge flip by updating the halfedge data structure accordingly.
+			Specifically, I saved the halfedges, vertices, and faces that are involved in the edge flip to temporary variables to prevent unexpected behavior.
+			Then, I drew the halfedge structure on my notes and indicated each part that I've saved to temporary variables. 
+			Next, I start by updating the halfedge structure that I drew in my notes then convert that into code.
+			Luckily, the only debugging part was not noticing that the order of code matters when updating the halfedge data structure, which was found by double-checking the order of updates in my notes.
+			Finally, I was able to successfully implement edge flip, and spent a bit of time testing and verifying the correctness of the implementation.
+		</p>
+		<h4>Here are the screenshots of dae/teapot.dae with and without edge flips:</h4>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q4teapot.png" width="400px"/>
+				  <figcaption>Teapot shading without edge flips.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4flip.png" width="400px"/>
+				  <figcaption>Teapot shading with edge flips.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h3>Part 5: Edge split</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
