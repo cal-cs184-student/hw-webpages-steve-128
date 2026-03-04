@@ -38,11 +38,6 @@
 		
 		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/hw2-meshedit-qwertyuiop">https://github.com/cal-cs184-student/hw2-meshedit-qwertyuiop</a>
 
-		<figure>
-			<img src="teapot.png" alt="Teapot" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
-		</figure>
-
 		<!--
 		We've already added one heading per part, to make your write-up as navigable when grading. Please fit your write-up within these sections!
 		-->
@@ -176,7 +171,42 @@
 		</div>
 
 		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Implementation of edge split:</h4>
+		<p>
+			Similar to edge flip, I first check for boundary edge, save the halfedge structures, and draw the halfedge structure on my notes. 
+			What's different from edge flip is that edge split involves more halfedges, vertices, and faces, so I had to be more careful in saving the correct halfedges, vertices, and faces to temporary variables.
+			After saving all the necessary halfedges, vertices, and faces to temporary variables and drawing the halfedge structure on my notes, I created new variables for the new halfedges, vertices, and faces that are created by the edge split. 
+			Learning from the debugging experience of edge flip, I was careful to double-check the order of updates in my notes before converting that into code, which helped me avoid bugs related to the order of updates.
+			Then, it is just putting the notes into code, and I was able to successfully implement edge split. 
+			However, I did encounter a new bug, which is just intializing new vertex, halfedges, and faces with <code>VertexIter()</code>, <code>HalfedgeIter()</code>, and <code>FaceIter()</code> respectively, which did not correctly initialize the new vertex, halfedges, and faces.
+			As a result, I thought my logic on my notes was incorrect. Turns out it was just the new vertex, halfedges, and faces that were not correctly initialized, which caused the implementation to not work as expected.
+			Finally, I also spent some time testing and verifying the correctness of the implementation after fixing the bug.
+		</p>
+		<h4>Here are the screenshots of dae/teapot.dae with and without edge flips:</h4>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q5orig.png" width="400px"/>
+				  <figcaption>Teapot shading without edge split.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q5split.png" width="400px"/>
+				  <figcaption>Teapot shading with edge split.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q5orig.png" width="400px"/>
+				  <figcaption>Teapot shading without edge split and flip.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q5flipsplit.png" width="400px"/>
+				  <figcaption>Teapot shading with edge split and flip.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
