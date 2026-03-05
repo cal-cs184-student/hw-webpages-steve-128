@@ -153,7 +153,7 @@
 		</div>
 
 		<h3>Part 4: Edge flip</h3>
-		<h4>Implementation of edge flip:</h4>
+		<h4>Implementation of edge flip and debugging journey:</h4>
 		<p>
 			Following the implementation reccomendations in the spec, I first check if the edge is a boundary edge. If it is, I return and don't preform the edge flip. 
 			If it is not a boundary edge, I perform the edge flip by updating the halfedge data structure accordingly.
@@ -180,7 +180,7 @@
 		</div>
 
 		<h3>Part 5: Edge split</h3>
-		<h4>Implementation of edge split:</h4>
+		<h4>Implementation of edge split and debugging journey:</h4>
 		<p>
 			Similar to edge flip, I first check for boundary edge, save the halfedge structures, and draw the halfedge structure on my notes. 
 			What's different from edge flip is that edge split involves more halfedges, vertices, and faces, so I had to be more careful in saving the correct halfedges, vertices, and faces to temporary variables.
@@ -218,7 +218,7 @@
 		</div>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		<h4>Implementation of Loop subdivision:</h4>
+		<h4>Implementation of Loop subdivision and debugging journey:</h4>
 		<p>
 			I implemented Loop subdivision by followint the hint on the spec. 
 			Basically, I first computed the new vertex positions for the existing vertices and edges. 
