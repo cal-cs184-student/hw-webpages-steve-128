@@ -209,10 +209,74 @@
 		</div>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Implementation of Loop subdivision:</h4>
+		<p>
+			I implemented Loop subdivision by followint the hint on the spec. 
+			Basically, I first computed the new vertex positions for the existing vertices and edges. 
+			Then I performed edge splits on all the edges, and mark the newly cretaed vertices and edges as new. 
+			Specifically, I computed the new vertex positions by following the formulas below:
+			<li>For an old vertex of degree (n), the updated position is \( \mathbf{v}' = (1 - n u)\mathbf{v} + u \sum_{i=1}^{n} \mathbf{v}_i \), where \( u = \frac{3}{16} \) if \( n = 3 \), and \( u = \frac{3}{8n} \) otherwise.</li>
+			<li>For a new vertex inserted on an interior edge with endpoints (A, B) and opposite vertices (C, D), the new position is \( m = \frac{3}{8}(A + B) + \frac{1}{8}(C + D) \).</li>
+			Next, I flip any new edge that connects an old and new vertex by comparing the isnew attribute of the vertices of the edge.
+			Finally, I update the vertex positions of all the vertices to the new vertex positions that I computed at the beginning.
+			I did encounter some bugs during the implementation, and the main source of bugs was not correctly handling the new vertices and edges created by edge splits, which caused the implementation to not work as expected.
+			As a result, when I rendered the mesh of the teapot after 1 loop subdivision, it looked very wrong.
+			It turned out that the bug was casued by the <code>edgeSplit</code> function. 
+			Specifically, I initially marked one of the two edges created by splitting an original edge as isNew = true. 
+			However, this edge is actually one half of the original edge and should not be flipped during the Loop subdivision flip step. 
+			Because of this incorrect flag, the algorithm flipped edges that were meant to remain fixed, producing incorrect connectivity and weird subdivision behavior.
+		</p>
+		<h4>Here are the screenshots of dae/beetle.dae with and without Loop subdivision:</h4>
+		<p>
+			From the screenshots below, we can see that the mesh after 3 Loop subdivisions is much smoother at the sharp corners and edges than the original mesh. 
+			This is especially noticeable in the holes of the beetle mesh. 
+			In theory, prespliting the edges around the holes should help preserve the hole structure after Loop subdivision as it provides more local control near sharp features.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q6beetle.png" width="400px"/>
+				  <figcaption>Beetle mesh without Loop subdivision.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q6beetle3loop.png" width="400px"/>
+				  <figcaption>Beetle mesh with 3 Loop subdivision.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<h4>Here are the screenshots of dae/cube.dae with and without Loop subdivision:</h4>
+		<p>
+			From the screenshots below, we can see that the mesh after 3 Loop subdivisions and no presplitting is somewhat asymmetric and has some weird artifacts, which is because the original cube mesh has very few vertices and edges.
+			As a result, the Loop subdivision does not have enough local control to preserve the sharp features of the cube.
+			So I did a bit of preprocessing by splitting on every edges on the face of the cube, which resulted in every face being subdivided into 4 triangles.
+			After this preprocessing step, the 3 loop subdivisions produced a round symmetric mesh. 
+			This is inevitable becasue I did not do the extra credit of supporting meshes with boundary.
+			Dispite that, preprocessing does create more local control for the loop subdivision and resulted in a better mesh than no preoprocessed mesh.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q6cube.png" width="400px"/>
+				  <figcaption>Cube mesh without Loop subdivision.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q6cube3loop.png" width="400px"/>
+				  <figcaption>Cube mesh with 3 Loop subdivision.</figcaption>
+				</td>
+			  </tr>
+			</table>
+			<tr>
+				<td style="text-align: center;">
+				  <img src="q6cube3loopwsplit.png" width="400px"/>
+				  <figcaption>Cube mesh with preprocessed edge splits and Loop subdivision.</figcaption>
+				</td>
+			</tr>
+		</div>
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 		<h2>Additional Notes (please remove)</h2>
 		<ul>
