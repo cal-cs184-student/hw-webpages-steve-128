@@ -161,7 +161,108 @@
 		</p>
 
 		<h2>Part 3: Direct Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Uniform hemisphere sampling:</h4>
+		<p>
+			In <code>estimate_direct_lighting_hemisphere</code>, I estimate direct illumination by sampling incoming directions uniformly over the hemisphere above the surface point. 
+			Initially, for num_samples, I sample a direction <code>wi</code> from the <code>hemisphereSampler</code> and transform it to the world coordinate system by multiplying it by the <code>o2w</code> matrix.
+			Then, I created a ray from the hit point along that direction. 
+			When creating this ray, I set <code>min_t = EPS_F</code> to avoid numerical precision issues that would cause the ray to immediately intersect the same surface it originated from.
+			If the ray hits an emissive object, I treat its emission as the incoming radiance <code>L_i</code>.
+			I then accumulate the Monte Carlo estimator <code>f(w_out, wi) * L_i * abs_cos_theta(wi) / pdf</code>, where the pdf for uniform hemisphere sampling is <code>1 / (2π)</code>.
+			After summing all samples, I divide by the total number of samples.
+		</p>
+
+		<h4>Light importance sampling:</h4>
+		<p>
+			In <code>estimate_direct_lighting_importance</code>, I estimate direct illumination by sampling directly from each light source instead of sampling arbitrary hemisphere directions.
+			Initially, for each light in the scene, I choose the number of samples to be 1 if the light is a point light source else <code>ns_area_light</code>.
+			Then, for each <code>num_samples</code> I call <code>SceneLight::sample_L</code> to get the emitted radiance as a Vector3D, write the world-space incident direction, the distance to the light, and the light pdf.
+			Next,I transform <code>wi_world</code> into local space and skip the sample if it lies below the surface. 
+			Then, similar to the uniform hemisphere sampling method, I create a ray from the hit point along the sampled direction and check if it hits an emissive object.
+			Again, the ray uses <code>min_t = EPS_F</code> and <code>max_t = distToLight - EPS_F</code> so that I only test whether something blocks the light before the ray reaches it.
+			If the shadow ray is not blocked, I accumulate the Monte Carlo estimator with <code>f(w_out, wi) * L_i * abs_cos_theta(wi) / pdf</code>.
+			Finally, I divide the accumulated radiance by the total number of samples taken across all lights to get the final estimate of direct lighting.
+		</p>
+
+		<h4>Screenshots:</h4>
+		<p>Here are some images rendered with uniform hemisphere sampling and light importance sampling:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="CBbunny_H_1_1.png" width="400px"/>
+				  <figcaption>uniform hemisphere sampling - bunny.png 1 light ray and 1 sample/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="CBbunny_H_16_8.png" width="400px"/>
+				  <figcaption>uniform hemisphere sampling - bunny.png 16 light rays and 8 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="CBbunny_H_64_32.png" width="400px"/>
+				  <figcaption>uniform hemisphere sampling - bunny.png 64 light rays and 32 samples/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_1_1.png" width="400px"/>
+				  <figcaption>light importance sampling - bunny.png 1 light ray and 1 sample/pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="CBbunny_I_16_8.png" width="400px"/>
+				  <figcaption>light importance sampling - bunny.png 16 light rays and 8 samples/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_64_32.png" width="400px"/>
+				  <figcaption>light importance sampling - bunny.png 64 light rays and 32 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>Dragon with different number of light rays</h4>
+		<p>
+			For this comparison, I used the dragon.png scene with 1, 4, 16, and 64 light rays per sample.
+			As shown in the images below, as the number of light rays increases, the rendered image becomes smoother and less noisy.
+			With only 1 light ray, the image is very noisy and has a lot of variance, especially in the shadowed areas. 
+			As I increase to 4 light rays, the noise is reduced but still noticeable. 
+			At 16 light rays, the image is much smoother with significantly less noise, and at 64 light rays, the image looks very clean with minimal noise and the dragon's texture is starting to show. 
+			This demonstrates that increasing the number of light rays per sample can greatly improve the quality of direct illumination estimates by reducing variance.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="dragon_1.png" width="400px"/>
+				  <figcaption>light importance sampling - dragon.png 1 light ray and 1 sample/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="dragon_4.png" width="400px"/>
+				  <figcaption>light importance sampling - dragon.png 4 light rays and 1 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="dragon_16.png" width="400px"/>
+				  <figcaption>light importance sampling - dragon.png 16 light rays and 1 samples/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="dragon_64.png" width="400px"/>
+				  <figcaption>light importance sampling - dragon.png 64 light rays and 1 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<h4>Uniform Hemisphere Sampling V.S. Light Importance Sampling:</h4>
+		<p>
+			Uniform hemisphere sampling and light sampling both provide unbiased estimates of direct illumination, but their variance is very different.
+			With uniform hemisphere sampling, directions are chosen randomly over the entire upper hemisphere, so most samples do not hit a light source and contribute little or nothing.
+			This results in very high variance and noisy images, especially when the number of samples is low.
+			On the other hand, light importance sampling directly samples directions toward the light sources, so a much larger fraction of samples contribute meaningful illumination.
+			As a result, light sampling converges much faster and produces significantly cleaner images for the same sample budget.
+			This is especially evident in the scene that had 1 light ray and 1 sample per pixel, where the uniform hemisphere sampling image is extremely noisy and we can only see the general shape of the object while the light importance sampling image is much clearer and we can basically see some level of detail of the object.
+		</p>
 
 		<h2>Part 4: Global Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -169,9 +270,6 @@
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		
 		<h2>Additional Notes (please remove)</h2>
 		<ul>
 			<li>You can also add code if you'd like as so: <code>code code code</code></li>
