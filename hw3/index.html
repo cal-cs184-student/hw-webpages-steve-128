@@ -41,7 +41,13 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		<p>
+			In this homework, I built a full path tracer.
+			Specifically, I implemented camera ray generation, computing ray intersections with triangles and spheres, accelerating rendering with BVH, adding direct and indirect lighting through Monte Carlo sampling, and improving efficiency with adaptive sampling.
+			As a whole, I was able to realize a lot of fundamental ray tracing techniques learned from the lectures and see how they work together to produce realistic images.
+			To me, the most interesting part was implementing global illumination with recursive ray tracing and Russian Roulette path termination.
+			Dispite it being the most challenging and time-consuming part, it was very rewarding to see how each bounce of light contributes to the final render and how it captures complex light interactions that are impossible to achieve with rasterization.
+		</p>
 
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
 		<h4>Ray Generation:</h4>
@@ -526,17 +532,6 @@
 			  </tr>
 			</table>
 		</div>
-
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
 		</div>
 	</body>
 </html>
