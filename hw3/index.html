@@ -33,6 +33,7 @@
 		<br>
 
 		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-steve-128/hw3/index.html">https://cal-cs184-student.github.io/hw-webpages-steve-128/hw3/index.html</a>
+		<br>
 		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/hw3-pathtracer-aqwerty">https://github.com/cal-cs184-student/hw3-pathtracer-aqwerty</a>
 
 		<!--           
@@ -265,7 +266,227 @@
 		</p>
 
 		<h2>Part 4: Global Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Indirect Lighting Implementation:</h4>
+		<p>
+			To implement indirect lighting, I start by implementing the <code>sample_f</code> to sample from cosine weighted hemisphere distribution and update the pdf.
+			To support global illumination, I updated the <code>est_radiance_global_illumination</code> function to return <code>zero_bounce_radiance(r, isect) + at_least_one_bounce_radiance(r, isect)</code> so that it returns both emitted light and light gathered from one or more bounces.
+			Then, the main work to support N-bounce rays and make sure the global illumination function works correctly is done by implementing <code>at_least_one_bounce</code> function with Russian roulette path termination.
+			Specifically, I build the function starting by validating the ray r and return the current result if the depth of the ray is 0.
+			Then, I check to see if accumulated bounces is enabled or if the ray r's depth is 1. 
+			If so, I add the direct lighting term through <code>one_bounce_radiance</code>, and return the current result otherwise.
+			To continue the path, I sample a new incoming direction <code>w_in</code> from the surface BSDF using <code>sample_f</code>, whcih allows me to get the the sampled direction <code>w_in</code>, the BSDF value <code>f</code>, and the sampling <code>pdf</code>.
+			After geeting the result from <code>sample_f</code>, I verify if the pdf is positive or the sampled direction lies above the surface.
+			If either of those conditions is not satisfied, I return the current result.
+			Then, I tranformed the sampled direction back into world space, create a new ray starting at the hit point with min_t = EPS_F, and decrement the ray depth.
+			For recursive indirect lighting, I trace a new ray along the sampled incoming direction and then determine whether it hits another surface or escapes to the environment.
+			I use Russian Roulette with continueProb = 0.6 to randomly terminate deeper paths, which helps reduce computation while keeping the estimator unbiased. 
+			However, the first indirect bounce is always traced by checking forceOneBounce = (r.depth == max_ray_depth), since the assignment requires at least one indirect bounce whenever indirect illumination is enabled.
+			When a recursive path is kept, I multiply the returned radiance by the BSDF term <code>f</code>, the cosine term <code>abs_cos_theta(w_in)</code>, and divide by the sampling <code>pdf</code>.
+			If Russian Roulette is used, I also divide by continueProb to account for the survival probability.
+			If the ray misses the scene, I use the environment light contribution instead.
+			This allows the renderer to efficiently estimate multi-bounce global illumination, including softer shading and more realistic light transport throughout the scene.
+		</p>
+
+		<h4>Images rendered with global illumination with 1024 samples per pixel:</h4>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="wall-e.png" width="400px"/>
+				  <figcaption>wall-e.dae</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="dragon.png" width="400px"/>
+				  <figcaption>dragon.dae</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bench.png" width="400px"/>
+				  <figcaption>bench.dae</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>Direct illumination vs. indirect illumination (1024 samples per pixel) of sphere_lambertian.dae:</h4>
+		<p>
+			Direct illumination shows the light that comes directly from the light sources to the surfaces, while indirect illumination captures the light that has bounced off other surfaces before reaching the point of interest.
+			In the direct illumination image, we can see sharp shadows and clear light patterns that correspond to the positions of the light sources, but the overall lighting looks flat and lacks depth.
+			On the ohter hand, the indirect illumination image shows much softer shadows and more gradual lighting transitions, which create a more realistic result.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="dir_sphere.png" width="400px"/>
+				  <figcaption>Direct illumination</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="indir_sphere.png" width="400px"/>
+				  <figcaption>Indirect illumination</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>mth bounce CBbunny.dae with isAccumBounces=false and 1024 samples per pixel:</h4>
+		<p>
+			2nd bounce image shows the first clear indirect illumination in the scene. 
+			The bunny is no longer lit only by direct light from the ceiling, but also by light that has already bounced off other surfaces.
+			This creates softer illumination in shadowed regions and introduces some color on the wall.
+			In the 3rd bounce render, the effect is weaker but still noticeable.
+			The light is spread even more evenly through the box, which smooths out the overall shading and makes the scene look less sharp.
+			Compared to rasterization, these higher-order bounces make the render look much more realistic because they capture global illumination effects.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="bunny_m0.png" width="400px"/>
+				  <figcaption>m = 0</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_m1.png" width="400px"/>
+				  <figcaption>m = 1</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_m2.png" width="400px"/>
+				  <figcaption>m = 2</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="bunny_m3.png" width="400px"/>
+				  <figcaption>m = 3</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_m4.png" width="400px"/>
+				  <figcaption>m = 4</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_m5.png" width="400px"/>
+				  <figcaption>m = 5</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>mth bounce CBbunny.dae with isAccumBounces=true and 1024 samples per pixel:</h4>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="abunny_m0.png" width="400px"/>
+				  <figcaption>m = 0</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="abunny_m1.png" width="400px"/>
+				  <figcaption>m = 1</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="abunny_m2.png" width="400px"/>
+				  <figcaption>m = 2</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="abunny_m3.png" width="400px"/>
+				  <figcaption>m = 3</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="abunny_m4.png" width="400px"/>
+				  <figcaption>m = 4</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="abunny_m5.png" width="400px"/>
+				  <figcaption>m = 5</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<p>
+			Accumulated renders get more complete as m increases, since each image includes all bounces up to that depth. 
+			Unaccumulated renders isolate one bounce at a time, so they show each contribution more clearly. 
+			The first bounce gives direct lighting, the ones after the second bounces are weaker but still help smooth the scene and add realism.
+		</p>
+
+		<h4>mth bounce CBbunny.dae with russian roulette rendering and 1024 samples per pixel:</h4>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="rabunny_m0.png" width="400px"/>
+				  <figcaption>m = 0</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="rabunny_m1.png" width="400px"/>
+				  <figcaption>m = 1</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="rabunny_m2.png" width="400px"/>
+				  <figcaption>m = 2</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="rabunny_m3.png" width="400px"/>
+				  <figcaption>m = 3</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="rabunny_m4.png" width="400px"/>
+				  <figcaption>m = 4</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="rabunny_m100.png" width="400px"/>
+				  <figcaption>m = 100</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>CBsphere_lambertian.dae with various sample-per-pixel rates:</h4>
+		<p>
+			At low sample per pixel rates, the image is very noisy, especially in shadows and indirect lighting. 
+			As sample per pixel increases, the noise decreases and the render becomes smoother and cleaner. 
+			By 1024 sample per pixel increases, the lighting is much more stable and accurate.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="1_sphere.png" width="400px"/>
+				  <figcaption>1 sample/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="2_sphere.png" width="400px"/>
+				  <figcaption>2 samples/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="4_sphere.png" width="400px"/>
+				  <figcaption>4 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="8_sphere.png" width="400px"/>
+				  <figcaption>8 samples/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="16_sphere.png" width="400px"/>
+				  <figcaption>16 samples/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="64_sphere.png" width="400px"/>
+				  <figcaption>64 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td colspan="3" style="text-align: center;">
+				  <img src="1024_sphere.png" width="400px"/>
+				  <figcaption>1024 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
