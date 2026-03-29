@@ -489,7 +489,43 @@
 		</div>
 
 		<h2>Part 5: Adaptive Sampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Adaptive Sampling Implementation:</h4>
+		<p>
+			Adaptive sampling improves rendering efficiency by allocating more samples to pixels that have high variance and fewer samples to pixels that have already converged.
+			In my implementation, I modified the <code>raytrace_pixel</code> function to perform adaptive sampling.
+			For each pixel, I traced up to <code>ns_aa</code> samples, and for every <code>samplesPerBatch</code> samples I computed a convergence test based on the illuminance of the samples collected so far.
+			To do this, I keep track of the sum of illuminance values and the sum of their squares.
+			Using these sums, I compute the mean and variance of the illuminance, and then calculate a confidence interval size for the true mean illuminance.
+			If the confidence interval size is smaller than the specified <code>maxTolerance * mu</code>, I consider the pixel to have converged and stop sampling further.
+			Otherwise, I continued tracing more rays.
+			At the end, I divided the accumulated radiance by the actual number of samples taken for that pixel and stored that count in <code>sampleCountBuffer</code>.
+		</p>
+
+		<h4>Rendered Images and Sample Rate Image(2048 samples per pixel, batch size = 64, tolerance = 0.05, 1 sample per light, max ray depth = 5):</h4>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="bunny.png" width="400px"/>
+				  <figcaption>Rendered image for bunny.dae</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_rate.png" width="400px"/>
+				  <figcaption>Sample rate image for bunny.dae</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="spheres_as.png" width="400px"/>
+				  <figcaption>Rendered image for spheres_lambertian.dae</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="spheres_as_rate.png" width="400px"/>
+				  <figcaption>Sample rate image for spheres_lambertian.dae</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h2>Additional Notes (please remove)</h2>
 		<ul>
