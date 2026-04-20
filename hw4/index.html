@@ -186,7 +186,137 @@
 		</figure>
 
 		<h2>Part 4: Handling self-collisions</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Implementation of handling self-collisions:</h4>
+		<p>
+			To handle self-collisions, I first build a spatial hash map using <code>build_spatial_map()</code>. 
+			This function places each point mass into a 3D grid cell based on its position, so that collision checks can be limited to nearby candidates instead of testing every pair of point masses. 
+			Following the spec, I use cell dimensions <code>w</code>, <code>h</code>, and <code>t</code>, compute the floored cell coordinates from the point mass position, and combine those coordinates into a single hash value using large constants to reduce hash collisions.
+		</p>
+		<p>
+			After building the map, I call <code>self_collide()</code> on each point mass. 
+			This function checks the other point masses stored in the same hash bucket and detects whether any are closer than 2 * thickness. 
+			If so, it computes a correction vector to push the current point mass away from the other one. 
+			The final position correction is the average of all such corrections, scaled down by <code>simulation_steps</code> to keep the response stable. 
+			This allows the cloth to collide with itself more realistically as it folds and falls, instead of passing through itself.
+		</p>
+
+		<h4>cloth falls with default parameter:</h4>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q4-1.png" width="400px"/>
+				  <figcaption>initial stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4-2.png" width="400px"/>
+				  <figcaption>middle stage 1</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q4-3.png" width="400px"/>
+				  <figcaption>middle stage 2</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4-4.png" width="400px"/>
+				  <figcaption>final stage</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>cloth fall with small ks:</h4>
+		<p>
+			With a low ks, the cloth is more flexible and deforms easily, so it tends to fold more easily and form softer folds as it falls onto itself.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q4sks1.png" width="400px"/>
+				  <figcaption>small ks initial stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4sks2.png" width="400px"/>
+				  <figcaption>small ks middle stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4sks3.png" width="400px"/>
+				  <figcaption>small ks final stage</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>cloth fall with large ks:</h4>
+		<p>
+			With a high ks, the cloth is stiffer and less flexible, so it tends to maintain its shape better and form sharper, more defined folds as it falls onto itself.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q4lks1.png" width="400px"/>
+				  <figcaption>large ks initial stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4lks2.png" width="400px"/>
+				  <figcaption>large ks middle stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4lks3.png" width="400px"/>
+				  <figcaption>large ks final stage</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>cloth fall with small density:</h4>
+		<p>
+			With a low density, the cloth is lighter and less affected by gravity, so it tends to fall slower and form looser folds as it falls onto itself.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q4sd1.png" width="400px"/>
+				  <figcaption>small density initial stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4sd2.png" width="400px"/>
+				  <figcaption>small density middle stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4sd3.png" width="400px"/>
+				  <figcaption>small density final stage</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>cloth fall with large density:</h4>
+		<p>
+			With a high density, the cloth is heavier and more affected by gravity, so it tends to fall faster and form tighter folds as it falls onto itself.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q4ld1.png" width="400px"/>
+				  <figcaption>large density initial stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4ld2.png" width="400px"/>
+				  <figcaption>large density middle stage</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q4ld3.png" width="400px"/>
+				  <figcaption>large density final stage</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h2>Part 5: Shaders</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
