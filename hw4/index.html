@@ -72,7 +72,73 @@
 		</div>
 
 		<h2>Part 2: Simulation via numerical integration</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Some screenshots of scene/pinned2.json with different ks:</h4>
+		<p>
+			With a low ks, the cloth is much softer and stretches more under gravity, so it collapses into a thinner shape. 
+			With a high ks, the cloth is stiffer and better preserves its shape, and this difference is very noticeable in its final resting state.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q2 ks s.png" width="400px"/>
+				  <figcaption>Low ks</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q2 ks n.png" width="400px"/>
+				  <figcaption>Default ks</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q2 ks l.png" width="400px"/>
+				  <figcaption>High ks</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>Some screenshots of scene/pinned2.json with different density:</h4>
+		<p>Lower density makes the cloth lighter, so the center top of the cloth did not drop as much as the higher density one.</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q2 density s.png" width="400px"/>
+				  <figcaption>Low density</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q2 density n.png" width="400px"/>
+				  <figcaption>Default density</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q2 density l.png" width="400px"/>
+				  <figcaption>High density</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h4>Some screenshots of scene/pinned2.json with different damping:</h4>
+		<p>With lower damping, the cloth keep oscillating for longer before coming to rest. Higher damping allows the cloth to settle faster.</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="q2 damping s.png" width="400px"/>
+				  <figcaption>Low damping</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="q2 damping l.png" width="400px"/>
+				  <figcaption>High damping</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<p>Screenshot of shaded cloth from scene/pinned4.json in its final resting state</p>
+		<figure>
+			<img src="q2.png" style="width:70%"/>
+			<figcaption>shaded scene/pinned4.json with default parameters</figcaption>
+		</figure>
 
 		<h2>Part 3: Handling collisions with other objects</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
